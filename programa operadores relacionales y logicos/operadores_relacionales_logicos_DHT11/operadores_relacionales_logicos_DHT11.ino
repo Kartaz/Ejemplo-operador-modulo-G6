@@ -46,12 +46,14 @@ const int LED2 = 2;
 const int TEMP_H = 28;
 
 // Variables
+
 int boton1_dato;
 int boton2_dato;
 int boton3_dato;
 float t;
 long timenow, timelast;
 int wait = 2000;
+
 //funciones
 float lecturaDHT (float t);
 int lecturaBotones (int boton1_dato, int boton2_dato, int boton3_dato);
@@ -61,13 +63,10 @@ void logica();
 DHT dht(DHTPIN, DHTTYPE);
 
 // Condiciones iniciales - Se ejecuta sólo una vez al energizar
-
-void setup() {// Inicio de void setup ()
-  // Aquí va tu código
-  
+void setup() 
+{// Inicio de void setup ()
   Serial.begin(9600);
   Serial.println(F("DHTxx test!"));
-
   //Configurar botones
   pinMode (BOTON1, INPUT_PULLUP);
   pinMode (BOTON2, INPUT_PULLUP);
@@ -78,7 +77,6 @@ void setup() {// Inicio de void setup ()
 
   dht.begin();//Iniciar comunicacion con el sensor DHT
   timelast=millis();
-
 }// Fin de void setup
 
 // Cuerpo del programa - Se ejecuta constamente
@@ -86,111 +84,18 @@ void setup() {// Inicio de void setup ()
 void loop() 
 {// Inicio de void loop
   // put your main code here, to run repeatedly:
-  //delay(2000);
   timenow = millis();
-
   if (timenow - timelast > wait)
   {
     timelast = timenow;
     lecturaDHT (t);
   }
-
- lecturaBotones(boton1_dato,  boton2_dato,  boton3_dato);
- logica();
-  
-
-  //*******Lectura del sensor*********
-  // Read temperature as Celsius (the default)
- /* float t = dht.readTemperature();
-   // Check if any reads failed and exit early (to try again).
-  if (isnan(t)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    return;
-  }
-  Serial.println(t);*/
-//  lecturaDHT(t);
-/*
-  //********Lectura del boton1********
-  boton1_dato = digitalRead (BOTON1);
-  if (boton1_dato == 1) {
-    digitalWrite (LED1, LOW);
-  } else {
-    digitalWrite (LED1, HIGH);
-  }
-
-  //********Automático por temperatura, sobrecarga y alta demanda**********
-  boton2_dato = digitalRead (BOTON2);
-  boton3_dato = digitalRead (BOTON3);
-  if (t > TEMP_H || boton2_dato == 1 || boton3_dato == 1) {
-    digitalWrite (LED2, HIGH);
-  } else {
-    digitalWrite (LED2, LOW);
-  }
-
-*/
-
-// comienza mi logica
-//void lecturaDHT (t);
-/*boton1_dato = digitalRead (BOTON1);
-boton2_dato = digitalRead (BOTON2);
-boton3_dato = digitalRead (BOTON3);*/
- /*   lecturaBotones(boton1_dato, boton2_dato, boton3_dato);
-    if (t<=TEMP_H )
-    {
-        
-        if (boton1_dato==0)
-            {
-                digitalWrite (LED1, LOW);//Led manual=0;
-             //   boton2_dato = digitalRead (BOTON2);
-              //  boton3_dato = digitalRead (BOTON3);
-                if (boton2_dato==0&&boton3_dato==0)
-                    {   
-                    digitalWrite (LED2, LOW); // Led auto=0;
-                    }
-                else
-                    {
-                    digitalWrite (LED2, HIGH); // led auto=1;
-                    }
-            }
-        else
-            {
-                digitalWrite (LED1, HIGH);//Led manual=1;
-        //        boton2_dato = digitalRead (BOTON2);
-          //      boton3_dato = digitalRead (BOTON3);
-                if (boton2_dato==0&&boton3_dato==0)
-                    {
-                    digitalWrite (LED2, LOW); //Led automatico=0
-                    }
-                else
-                    {
-                    digitalWrite (LED2, HIGH); //Led automatico=1
-                    }
-            }
-    }
-    else
-    {
-        digitalWrite (LED2, HIGH); //Led automatico=1
-       // boton1_dato = digitalRead (BOTON1);
-       // boton2_dato = digitalRead (BOTON2);
-       // boton3_dato = digitalRead (BOTON3);
-        if (boton1_dato==0&&boton2_dato==0&&boton3_dato==0)
-            {
-            digitalWrite (LED1, LOW); //Led manual=0;
-            }
-        else
-            {
-            digitalWrite (LED2, HIGH); //Led automatico=1
-            }
-    }
-
-
-
-
-  
-*/
+  lecturaBotones(boton1_dato,  boton2_dato,  boton3_dato);
+  logica();
 }// Fin de void loop
 
 // Funciones del usuario
+
 float lecturaDHT(float t)
 {
   float tempe = dht.readTemperature();
@@ -205,7 +110,7 @@ float lecturaDHT(float t)
   
 }
 int lecturaBotones (int boton1_dato, int boton2_dato, int boton3_dato)
- {
+ {  //********Lectura de los botones********
   boton1_dato = digitalRead (BOTON1);
   boton2_dato = digitalRead (BOTON2);
   boton3_dato = digitalRead (BOTON3);
@@ -213,7 +118,7 @@ int lecturaBotones (int boton1_dato, int boton2_dato, int boton3_dato)
  }
 
 void logica()
-{
+{  //********Automático por temperatura, sobrecarga y alta demanda**********
   lecturaBotones(boton1_dato, boton2_dato, boton3_dato);
     if (t<=TEMP_H )
     {
@@ -221,8 +126,6 @@ void logica()
         if (boton1_dato==0)
             {
                 digitalWrite (LED1, LOW);//Led manual=0;
-             //   boton2_dato = digitalRead (BOTON2);
-              //  boton3_dato = digitalRead (BOTON3);
                 if (boton2_dato==0&&boton3_dato==0)
                     {   
                     digitalWrite (LED2, LOW); // Led auto=0;
@@ -235,8 +138,6 @@ void logica()
         else
             {
                 digitalWrite (LED1, HIGH);//Led manual=1;
-        //        boton2_dato = digitalRead (BOTON2);
-          //      boton3_dato = digitalRead (BOTON3);
                 if (boton2_dato==0&&boton3_dato==0)
                     {
                     digitalWrite (LED2, LOW); //Led automatico=0
@@ -250,9 +151,6 @@ void logica()
     else
     {
         digitalWrite (LED2, HIGH); //Led automatico=1
-       // boton1_dato = digitalRead (BOTON1);
-       // boton2_dato = digitalRead (BOTON2);
-       // boton3_dato = digitalRead (BOTON3);
         if (boton1_dato==0&&boton2_dato==0&&boton3_dato==0)
             {
             digitalWrite (LED1, LOW); //Led manual=0;
@@ -262,96 +160,4 @@ void logica()
             digitalWrite (LED2, HIGH); //Led automatico=1
             }
     }
-
-
-
-
-  
-
-
 }
-
-
-// mi codigo en c
-/*#include <stdio.h>
-
-
-
-int
-main ()
-{
-  int temp, b1, b2, b3, L1, L2;
-  for (int i = 0; i < 16; i++)
-    {
-        printf("%i",i);
-      printf ("temperatura: ");
-      scanf ("%i", &temp);
-      printf ("boton manual: ");
-      scanf ("%d", &b1);
-      printf ("boton lata demanda: ");
-      scanf ("%d", &b2);
-      printf ("boton sobrecarga: ");
-      scanf ("%d", &b3);
-      if (temp <= 28)
-  {
-    if (b1 == 0)
-      {
-        L1 = 0;
-        if (b2 == 0 && b3 == 0)
-    {
-      L2 = 0;
-    }
-        else
-    {
-      L2 = 1;
-    }
-      }
-    else
-      {
-        L1 = 1;
-        if (b2 == 0 && b3 == 0)
-    {
-      L2 = 0;
-    }
-        else
-    {
-      L2 = 1;
-    }
-      }
-  }
-      else
-  {
-    L2 = 1;
-    if (b1 == 0 && b2 == 0 && b3 == 0)
-      {
-        L1 = 0;
-      }
-    else
-      {
-        L1 = 1;
-      }
-  }
-  if (temp<=28)
-  {
-      temp=0;
-  }
-  else
-  {
-    temp=1;
-  }
-      printf ("temperatura | ");
-      printf ("boton 1 | ");
-      printf ("boton 2 | ");
-      printf ("boton 3 | ");
-      printf ("Led man | ");
-      printf ("Led auto | \n");
-      printf ("\t %i  | ", temp);
-      printf("\t %i    | ", b1);
-      printf("    %i   | ", b2);
-      printf("    %i   | ", b3);
-      printf("    %i   | ", L1);
-      printf("    %i    | \n", L2);
-}
-  return 0;
-}
-*/
