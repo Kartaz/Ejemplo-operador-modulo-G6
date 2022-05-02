@@ -35,7 +35,6 @@
 // Constantes
 #define DHTPIN 12
 #define DHTTYPE DHT11
-
 //Constantes de botones
 const int BOTON1 = 14;
 const int BOTON2 = 15;
@@ -47,16 +46,16 @@ const int LED2 = 2;
 const int TEMP_H = 28;
 
 // Variables
-
 int boton1_dato;
 int boton2_dato;
 int boton3_dato;
 float t;
 long timenow, timelast;
 int wait = 2000;
+//funciones
 float lecturaDHT (float t);
-//int lecturaBotones
-//int ComparacionAND
+int lecturaBotones (int boton1_dato, int boton2_dato, int boton3_dato);
+void logica();
 
 // Definición de objetos
 DHT dht(DHTPIN, DHTTYPE);
@@ -93,11 +92,11 @@ void loop()
   if (timenow - timelast > wait)
   {
     timelast = timenow;
-    lecturaDHT;
+    lecturaDHT (t);
   }
 
- // lecturabotones();
- // logica();
+ lecturaBotones(boton1_dato,  boton2_dato,  boton3_dato);
+ logica();
   
 
   //*******Lectura del sensor*********
@@ -109,7 +108,7 @@ void loop()
     return;
   }
   Serial.println(t);*/
-  lecturaDHT(t);
+//  lecturaDHT(t);
 /*
   //********Lectura del boton1********
   boton1_dato = digitalRead (BOTON1);
@@ -131,18 +130,19 @@ void loop()
 */
 
 // comienza mi logica
-//void lecturaDHT ();
-boton1_dato = digitalRead (BOTON1);
+//void lecturaDHT (t);
+/*boton1_dato = digitalRead (BOTON1);
 boton2_dato = digitalRead (BOTON2);
-boton3_dato = digitalRead (BOTON3);
+boton3_dato = digitalRead (BOTON3);*/
+ /*   lecturaBotones(boton1_dato, boton2_dato, boton3_dato);
     if (t<=TEMP_H )
     {
         
         if (boton1_dato==0)
             {
                 digitalWrite (LED1, LOW);//Led manual=0;
-                boton2_dato = digitalRead (BOTON2);
-                boton3_dato = digitalRead (BOTON3);
+             //   boton2_dato = digitalRead (BOTON2);
+              //  boton3_dato = digitalRead (BOTON3);
                 if (boton2_dato==0&&boton3_dato==0)
                     {   
                     digitalWrite (LED2, LOW); // Led auto=0;
@@ -155,8 +155,8 @@ boton3_dato = digitalRead (BOTON3);
         else
             {
                 digitalWrite (LED1, HIGH);//Led manual=1;
-                boton2_dato = digitalRead (BOTON2);
-                boton3_dato = digitalRead (BOTON3);
+        //        boton2_dato = digitalRead (BOTON2);
+          //      boton3_dato = digitalRead (BOTON3);
                 if (boton2_dato==0&&boton3_dato==0)
                     {
                     digitalWrite (LED2, LOW); //Led automatico=0
@@ -170,9 +170,89 @@ boton3_dato = digitalRead (BOTON3);
     else
     {
         digitalWrite (LED2, HIGH); //Led automatico=1
-        boton1_dato = digitalRead (BOTON1);
-        boton2_dato = digitalRead (BOTON2);
-        boton3_dato = digitalRead (BOTON3);
+       // boton1_dato = digitalRead (BOTON1);
+       // boton2_dato = digitalRead (BOTON2);
+       // boton3_dato = digitalRead (BOTON3);
+        if (boton1_dato==0&&boton2_dato==0&&boton3_dato==0)
+            {
+            digitalWrite (LED1, LOW); //Led manual=0;
+            }
+        else
+            {
+            digitalWrite (LED2, HIGH); //Led automatico=1
+            }
+    }
+
+
+
+
+  
+*/
+}// Fin de void loop
+
+// Funciones del usuario
+float lecturaDHT(float t)
+{
+  float tempe = dht.readTemperature();
+   // Check if any reads failed and exit early (to try again).
+  if (isnan(t)) 
+  {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    //return;
+  }
+  Serial.println(t);
+  return tempe;
+  
+}
+int lecturaBotones (int boton1_dato, int boton2_dato, int boton3_dato)
+ {
+  boton1_dato = digitalRead (BOTON1);
+  boton2_dato = digitalRead (BOTON2);
+  boton3_dato = digitalRead (BOTON3);
+  return boton1_dato,boton2_dato,boton3_dato; 
+ }
+
+void logica()
+{
+  lecturaBotones(boton1_dato, boton2_dato, boton3_dato);
+    if (t<=TEMP_H )
+    {
+        
+        if (boton1_dato==0)
+            {
+                digitalWrite (LED1, LOW);//Led manual=0;
+             //   boton2_dato = digitalRead (BOTON2);
+              //  boton3_dato = digitalRead (BOTON3);
+                if (boton2_dato==0&&boton3_dato==0)
+                    {   
+                    digitalWrite (LED2, LOW); // Led auto=0;
+                    }
+                else
+                    {
+                    digitalWrite (LED2, HIGH); // led auto=1;
+                    }
+            }
+        else
+            {
+                digitalWrite (LED1, HIGH);//Led manual=1;
+        //        boton2_dato = digitalRead (BOTON2);
+          //      boton3_dato = digitalRead (BOTON3);
+                if (boton2_dato==0&&boton3_dato==0)
+                    {
+                    digitalWrite (LED2, LOW); //Led automatico=0
+                    }
+                else
+                    {
+                    digitalWrite (LED2, HIGH); //Led automatico=1
+                    }
+            }
+    }
+    else
+    {
+        digitalWrite (LED2, HIGH); //Led automatico=1
+       // boton1_dato = digitalRead (BOTON1);
+       // boton2_dato = digitalRead (BOTON2);
+       // boton3_dato = digitalRead (BOTON3);
         if (boton1_dato==0&&boton2_dato==0&&boton3_dato==0)
             {
             digitalWrite (LED1, LOW); //Led manual=0;
@@ -188,23 +268,8 @@ boton3_dato = digitalRead (BOTON3);
 
   
 
-}// Fin de void loop
 
-// Funciones del usuario
-float lecturaDHT(float t)
-{
-  float tempe = dht.readTemperature();
-   // Check if any reads failed and exit early (to try again).
-  if (isnan(t)) 
-  {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    //return;
-  }
-  Serial.println(t);
-  return tempe;
 }
-
-
 
 
 // mi codigo en c
